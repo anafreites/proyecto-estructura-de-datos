@@ -77,4 +77,10 @@ void repartir(){
         p ++;
         if (p >= njugadores) p = 0; //volver al primer jugador despues de repartir
     }
+    i = 0; //reiniciamos el indice para ordenar las cartas de los jugadores
+    while (i < njugadores){
+        ordenar_cartas(&jugadores[i]); //ordenamos la mano de c/jugador despues de repartir las cartas
+        i ++;
+    }
+
 }
