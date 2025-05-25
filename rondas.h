@@ -109,9 +109,9 @@ void repartir() {
     //empezamos a repartir las cartas
     while (mazo.head != NULL) {
         NodeCartas* carta = pop(&mazo);
-        carta->next = jugadores[i].mano.head;
+        carta->next = jugadores[i].mano.head; //apuntamos la siguiente carta a la cabeza de la lista
         jugadores[i].mano.head = carta;
-        jugadores[i].mano.size++;
+        jugadores[i].mano.size++; //incrementamos el tamano de la mano
         i++;
         if (i >= njugadores) i = 0; //volvemos al primer jugador al terminar de repartirles a todos
     }
@@ -122,4 +122,3 @@ void repartir() {
         i++;
     }
 }
-
