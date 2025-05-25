@@ -50,6 +50,7 @@ Jugador jugadores[4]; //maximo de jugadores
 NodeCartas *ultCarta = NULL; //ultima carta jugada
 int jugadorActual = 0; //indice del jugador actual (para saber de quien es el turno)
 int njugadores = 4; //numero total de jugadores
+int ronda = 1; //contador de rondas
 
 //funcion para intercambiar las cartas (se usara para ordenarlas)
 void intercambiar (NodeCartas *a, NodeCartas *b){
@@ -121,4 +122,20 @@ void repartir() {
         ordenarCartas(&jugadores[i]);
         i++;
     }
+}
+
+//funcion para encontrar al jugador que empezara la ronda
+int primerJugador(){
+    int i = 0; //indice para recorrer a los jugadors
+    int found = -1; //inicia en -1 (no encontrado) por defecto, es la variable que guardara el indice del jugador que tiene al 3 de diamantes
+    NodeCartas *aux; //auxiliar para recorrer la mano de los jugadores
+    while (i < njugadores && found == -1){ //ciclo que se repite mientras no se haya encontrado el 3 de diamantes (recorriendo a cada jugador)
+        aux = jugadores[i].mano.head;
+        while (aux && found == -1){ //recorre la mano de c/jugador (individualmente) mientras no se haya encontrado el 3 de diamantes
+            if (aux -> rangoCartas == 0 && aux -> paloCartas == 1) found = i; //se encontro al jugador que tiene el 3 de diamantes (rango 0 y palo 1)
+            aux = aux -> next; //si no se encuentra apunta a la sig carta
+        }   
+        i ++; //pasamos al sig jugador si no encuentra el 3 de diamantes
+    }
+    return found; //devuelve el indice del jugador que tiene el 3 de diamantes
 }
