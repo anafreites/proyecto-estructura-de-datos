@@ -9,19 +9,19 @@ struct Node {
 
 void push(listCartas *p, int rangoCartas, int paloCartas) {
     NodeCartas *newElement = new NodeCartas;
-    newElement -> rangoCartas = rangoCartas;
-    newElement -> paloCartas = paloCartas;
-    newElement -> next = p -> head;
-    p -> head = newElement;
-    p -> size ++;
+    newElement->rangoCartas = rangoCartas;
+    newElement->paloCartas = paloCartas;
+    newElement->next = p->head;
+    p->head = newElement;
+    p->size++;
 }
 
-int pop(listaCartas *p) {
-    if (!(*p)) return 0;
-    NodeCartas *aux = p -> head;
-    p -> head = (p -> head) -> next;
-    p -> size --;
-    delete aux;
+NodeCartas* pop(listCartas *p) {
+    if (!p || !(p->head)) return NULL;
+    NodeCartas *aux = p->head;
+    p->head = p->head->next;
+    p->size--;
+    aux->next = NULL;
     return aux;
 }
 
