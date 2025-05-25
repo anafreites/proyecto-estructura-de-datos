@@ -6,42 +6,58 @@
 
 using namespace std;
 
-struct cartas {
-    int rango_cartas; //valores de las cartas
-    int palo; //0 = trebol, 1 = diamante, 2 = corazon, 3 = espada
+//declaracion de un nodo tipo carta
+struct NodeCartas {
+    int rangoCartas; //valores de las cartas (del 0 al 12, siendo 0 = 3, 1 = 4... 12 = 2)
+    int paloCartas; //0 = trebol, 1 = diamante, 2 = corazon, 3 = espada
+    NodeCartas *next;
 };
 
-struct jugador {
-    cartas mano[13]; // mano del jugador
-    int tamano_mano; // cantidad de cartas de c/jugador
-    int turno; //saber si el jugador tuvo su turno
-    char nombre[10]; //arreglo para guardar el nombre de un jugador
+//declaracion de la lista de la cartas a parte para facilitar la cuenta de las cartas
+struct listCartas {
+    NodeCartas *head; //puntero a la primera carta del mazo
+    int size; //para guardar el tamano de la mano de los jugadores
+};
+
+//caracteristicas de cada jugador
+struct Jugador {
+    listCartas mano; // mano del jugador
+    bool turno; //saber si el jugador tuvo su turno
+    char nombre[10]; //arreglo para guardar el nombre de los jugadores
 };
 
 //variables
-cartas mazo[54]; // numero total de cartas
-jugador jugadores[4]; //maximo de jugadores
+listCartas mazo; //declaracion del mazo
+Jugador jugadores[4]; //maximo de jugadores
+NodeCartas *ultCarta = NULL; //ultima carta jugada
 int jugadorActual = 0; //indice del jugador actual (para saber de quien es el turno)
 int njugadores = 4; //numero total de jugadores
 
 //funcion para intercambiar las cartas (se usara para ordenarlas)
-void intercambiar (cartas *a, cartas *b){
-    cartas aux = *a; //auxiliar para no perder el valor de la primera carta
-    *a = *b;
-    *b = aux;
-
+void intercambiar (NodeCartas *a, NodeCartas *b){
+    int auxRango = a -> rangoCartas; //auxiliares para no perder los valores del rango y palo de la primera carta
+    int auxPalos = a -> paloCartas;
+    a -> rangoCartas = b -> rangoCartas; 
+    a -> paloCartas = b -> paloCartas;
+    b -> rangoCartas = auxRango; //intercambio de los valores de las cartas
+    b -> paloCartas = auxPalos;
 }
 
 //funcion para ordenar las cartas en las manos de los jugadores
-void ordenar_cartas (jugador *p){
-    int i = 0;
-    while (i < p -> tamano_mano -1){ //indice menor a lo que esta apuntando p menos 1
-        int j = i + 1; //indice auxiliar
-        while (j < p -> tamano_mano){ //indice menor a lo que esta apuntando p
-            if (p -> mano[i].rango_cartas > p -> mano[j].rango_cartas){ //comparacion de dos cartas dentro del arreglo
-                intercambiar(&p -> mano[i], &p -> mano[j]);
-            }
-            j ++;
+void ordenarCartas (Jugador *p){
+    if (p -> mano.size <= 1) return; //dejar la mano tal cual si el jugador no tiene cartas o tiene 1 sola
+    int i = 0; //indice general
+    NodeCartas *cartaActual;
+    NodeCartas *sigCarta;
+    while (i < p -> mano.size -1){ //para que el ciclo se repita hasta que todas las cartas esten ordenadas
+        cartaActual = p -> mano.head; //la carta actual es la primera de la mano
+        sigCarta = cartaActual -> next;
+        int j = 0; //indice para recorrer la lista
+        while (j < p -> mano.size - i - 1 && sigCarta != NULL){ //comparar cartas adyacentes
+            if (cartaActual -> rangoCartas > sigCarta -> rangoCartas) intercambiar(cartaActual,sigCarta); //intercambiar si la carta tiene mayor rango que la que le sigue
+            cartaActual = sigCarta;
+            sigCarta = sigCarta -> next;
+            j++;
         }
         i ++;
     }
@@ -49,17 +65,16 @@ void ordenar_cartas (jugador *p){
 
 //funcion para inicializar un mazo
 void crear_mazo(){
-    int i = 0; //indice general
-    int p = 0; //indice de los palos de las cartas (0 = trebol, 1 = diamante, 2 = corazon, 3 = espada)
-    while (p < 4){
-        int r = 0; //indice del rango de las cartas (del 0 al 12)
-        while (r < 13){
-            mazo[i].rango_cartas = r; //asignacion del rango de la carta
-            mazo[i].palo = p; //asignacion del palo de la carta
-            i ++;
-            r ++;
+    mazo.head = NULL;
+    mazo.size = 0; //inicializamos el mazo en 0 para que este vacio
+    int palo = 0;
+    while (palo < 4){ //sabemos que el palo puede ser 0, 1, 2 y 3
+        int rango = 0; //reiniciamos el rango de las cartas
+        while (rango < 13){ //el rango va de 0 a 12
+            push(&mazo, rango, palo);
+            rango ++;
         }
-        p ++;
+        palo ++;
     }
 }
 
@@ -67,24 +82,24 @@ void crear_mazo(){
 void repartir(){
     int i = 0; //indice general
     while (i < njugadores){ //reiniciar el tamano de las manos para no usar cartas de rondas anteriores
-        jugadores[i].tamano_mano = 0;
+        jugadores[i].mano.head = NULL;
+        jugadores[i].mano.size = 0;
         i ++;
     }
-
-    int j = 0; //indice auxiliar
-    int p = 0; //indice del jugador actual
-    while (j < 54){
-        jugadores[p].mano[jugadores[p].tamano_mano] = mazo[j]; //darle na carta a un jugador
-        jugadores[p].tamano_mano ++; //aumentar el tamano de la mano de dicho jugador
-        j ++;
-        p ++;
-        if (p >= njugadores) p = 0; //volver al primer jugador despues de repartir
+    i = 0;
+    while (mano.head){
+        NodeCartas *carta = pop(&mazo);
+        carta -> next = jugadores[i].mano.head;
+        jugadores[i].mano.head = carta;
+        jugadores[i].mano.size ++;
+        i ++;
     }
-    i = 0; //reiniciamos el indice para ordenar las cartas de los jugadores
+    i = 0;
     while (i < njugadores){
-        ordenar_cartas(&jugadores[i]); //ordenamos la mano de c/jugador despues de repartir las cartas
+        ordenarCartas(&jugadores[i].mano);
         i ++;
     }
+    
 
 }
 
