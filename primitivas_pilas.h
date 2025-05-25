@@ -1,4 +1,5 @@
 #include <iostream>
+#include "rondas.h"
 using namespace std;
 
 struct Node {
@@ -6,20 +7,22 @@ struct Node {
     Node *next;
 };
 
-void push(Node **p, int value) {
-    Node *newElement = new Node;
-    newElement->value = value;
-    newElement->next = *p;
-    *p = newElement;
+void push(listCartas *p, int rangoCartas, int paloCartas) {
+    NodeCartas *newElement = new NodeCartas;
+    newElement -> rangoCartas = rangoCartas;
+    newElement -> paloCartas = paloCartas;
+    newElement -> next = p -> head;
+    p -> head = newElement;
+    p -> size ++;
 }
 
-int pop(Node **p) {
+int pop(listaCartas *p) {
     if (!(*p)) return 0;
-    Node *aux = *p;
-    int value = (*p)->value;
-    *p = (*p)->next;
+    NodeCartas *aux = p -> head;
+    p -> head = (p -> head) -> next;
+    p -> size --;
     delete aux;
-    return value;
+    return aux;
 }
 
 int top(Node *p) {
