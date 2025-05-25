@@ -79,27 +79,29 @@ void crear_mazo(){
 }
 
 //funcion para repartir cartas
-void repartir(){
-    int i = 0; //indice general
-    while (i < njugadores){ //reiniciar el tamano de las manos para no usar cartas de rondas anteriores
+void repartir() {
+    int i = 0;
+    //reiniciamos las manos de los jugadores para evitar usar cartas de rondas anteriores
+    while (i < njugadores) {
         jugadores[i].mano.head = NULL;
         jugadores[i].mano.size = 0;
-        i ++;
+        i++;
     }
     i = 0;
-    while (mano.head){
-        NodeCartas *carta = pop(&mazo);
-        carta -> next = jugadores[i].mano.head;
+    //empezamos a repartir las cartas
+    while (mazo.head != NULL) {
+        NodeCartas* carta = pop(&mazo);
+        carta->next = jugadores[i].mano.head;
         jugadores[i].mano.head = carta;
-        jugadores[i].mano.size ++;
-        i ++;
+        jugadores[i].mano.size++;
+        i++;
+        if (i >= njugadores) i = 0; //volvemos al primer jugador al terminar de repartirles a todos
     }
     i = 0;
-    while (i < njugadores){
-        ordenarCartas(&jugadores[i].mano);
-        i ++;
+    //ordenamos las cartas de los jugadores
+    while (i < njugadores) {
+        ordenarCartas(&jugadores[i]);
+        i++;
     }
-    
-
 }
 
