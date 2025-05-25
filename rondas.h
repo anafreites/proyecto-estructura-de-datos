@@ -1,6 +1,8 @@
 #include <iostream>
+#include "primitivas_pilas.h"
 // #include "cartas.h"
 // #include "rangos.h"
+
 
 using namespace std;
 
@@ -13,6 +15,7 @@ struct jugador {
     cartas mano[13]; // mano del jugador
     int tamano_mano; // cantidad de cartas de c/jugador
     int turno; //saber si el jugador tuvo su turno
+    char nombre[10]; //arreglo para guardar el nombre de un jugador
 };
 
 //variables
@@ -84,3 +87,4 @@ void repartir(){
     }
 
 }
+
