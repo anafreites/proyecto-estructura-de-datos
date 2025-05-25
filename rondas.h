@@ -26,6 +26,24 @@ struct Jugador {
     char nombre[10]; //arreglo para guardar el nombre de los jugadores
 };
 
+void push(listCartas *p, int rangoCartas, int paloCartas) {
+    NodeCartas *newElement = new NodeCartas;
+    newElement->rangoCartas = rangoCartas;
+    newElement->paloCartas = paloCartas;
+    newElement->next = p->head;
+    p->head = newElement;
+    p->size++;
+}
+
+NodeCartas* pop(listCartas *p) {
+    if (!p || !(p->head)) return NULL;
+    NodeCartas *aux = p->head;
+    p->head = p->head->next;
+    p->size--;
+    aux->next = NULL;
+    return aux;
+}
+
 //variables
 listCartas mazo; //declaracion del mazo
 Jugador jugadores[4]; //maximo de jugadores
