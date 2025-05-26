@@ -1,5 +1,4 @@
 #include <iostream>
-
 using namespace std;
 
 //declaracion de un nodo tipo carta
@@ -143,7 +142,7 @@ void initJugadores() {
     }
 }
 
-//funcion para encontrar al jugador que empezara la ronda
+//funcion para encontrar al jugador que empezara la primera ronda
 int primerJugador(){
     int i = 0; //indice para recorrer a los jugadors
     int found = -1; //inicia en -1 (no encontrado) por defecto, es la variable que guardara el indice del jugador que tiene al 3 de diamantes
@@ -158,6 +157,28 @@ int primerJugador(){
     }
     return found; //devuelve el indice del jugador que tiene el 3 de diamantes
 }
+
+//funcion para comparar el rango de los jugadores
+int compararRangos (char *a, char *b){ //dos punteros a los arreglos (donde estaran los rangos de los jugadores)
+    int i = 0; //indice para recorrer los arreglos 
+    while (a[i] != '\0' && b[i] != '\0'){ //mientras ambos caracteres sean diferentes del caracter nulo
+        if (a[i] != b[i]) return 0; //si hay alguna diferencia entonces son rangos diferentes
+        i ++; //avanzamos el indice para pasar al siguiente caracter
+    }
+    return a[i] == b[i]; //devuelve 1 cuando son iguales
+}
+
+//funcion para encontrar al mendigo para que inicie la sig ronda
+int encontrarMendigo() {
+    char rangoMendigo[10] = "Mendigo";
+    for (int i = 0; i < njugadores; i++) {
+        if (compararRangos(jugadores[i].rango, rangoMendigo)) {
+            return i; // devuelve el índice del jugador mendigo
+        }
+    }
+    return -1; // si no se encuentra
+}
+
 
 //funcion para iniciar una ronda
 void initRonda(){
