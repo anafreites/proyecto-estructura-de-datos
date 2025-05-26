@@ -1,5 +1,4 @@
 #include <iostream>
-#include "primitivas_pilas.h"
 // #include "cartas.h"
 // #include "rangos.h"
 
@@ -127,7 +126,7 @@ void repartir() {
 //funcion que guarda los nombres de los jugadores y reinicia sus manos y tunos
 void initJugadores(){
     char nombres[4][10] = {"Tu", "Jugador1", "Jugador2", "Jugador3"} //arreglo de 4 arreglos de hasta 10 caracteres
-    int = 0; //indice para recorrer a todos los jugadores
+    int i = 0; //indice para recorrer a todos los jugadores
     while (i < njugadores){
         int j = 0; //indice que recorre c/letra de los nombres
         while (j<9){ //debe sobrar 1 caracter para poner el caracter nulo (\0)
