@@ -1,7 +1,4 @@
 #include <iostream>
-// #include "cartas.h"
-// #include "rangos.h"
-
 
 using namespace std;
 
@@ -23,6 +20,8 @@ struct Jugador {
     listCartas mano; // mano del jugador
     bool turno; //saber si el jugador tuvo su turno
     char nombre[10]; //arreglo para guardar el nombre de los jugadores
+    char rango[10]; //arreglo para guardar el rango del jugador
+    int puntos_acumulados; //puntos del jugador
 };
 
 //primitivas adaptadas a la logica del juego
@@ -143,7 +142,6 @@ void initJugadores() {
         i++; //pasamos al sig jugador
     }
 }
-
 
 //funcion para encontrar al jugador que empezara la ronda
 int primerJugador(){
