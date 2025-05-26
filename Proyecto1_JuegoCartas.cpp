@@ -1,4 +1,5 @@
 #include <iostream>
+#include "menu.h"
 #include "rondas.h"
 
 using namespace std;
@@ -7,6 +8,7 @@ using namespace std;
 int ronda = 1;
 
 int main(){
+    obtenerOpcionMenu(1, 3);
     while (ronda <= 3){
         cout << "Ronda " << ronda << endl;
         initRonda();
