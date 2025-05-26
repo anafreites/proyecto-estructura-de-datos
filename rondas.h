@@ -92,6 +92,7 @@ void crear_mazo(){
             push(&mazo, rango, palo);
             rango ++;
         }
+        push(&mazo, 13, -1); //agregar los jokers COMMIT
         palo ++;
     }
 }
