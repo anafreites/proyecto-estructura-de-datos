@@ -124,24 +124,25 @@ void repartir() {
 }
 
 //funcion que guarda los nombres de los jugadores y reinicia sus manos y tunos
-void initJugadores(){
-    char nombres[4][10] = {"Tu", "Jugador1", "Jugador2", "Jugador3"} //arreglo de 4 arreglos de hasta 10 caracteres
+void initJugadores() {
+    char nombres[4][10] = {"Tu", "Jugador1", "Jugador2", "Jugador3"}; //arreglo de 4 arreglos de hasta 10 caracteres
     int i = 0; //indice para recorrer a todos los jugadores
-    while (i < njugadores){
-        int j = 0; //indice que recorre c/letra de los nombres
-        while (j<9){ //debe sobrar 1 caracter para poner el caracter nulo (\0)
+    while (i < njugadores) {
+        int j = 0; //indice que recorre c/letra del nombre
+        while (j < 9) { //debe sobrar 1 caracter para poner el caracter nulo (\0)
             jugadores[i].nombre[j] = nombres[i][j]; //con esto copiamos caracter por caracter al arreglo de los nombres
-            if (nombres[i][j] == \0) break //rompemos el ciclo cuando llegue al final del nombre
+            if (nombres[i][j] == '\0') break; //rompemos el ciclo cuando llegue al final del nombre
+            j++;
         }
-        j ++;
+        jugadores[i].nombre[j] = '\0'; //aseguramos que el nombre termino
+        // reiniciamos la mano del jugador  
+        jugadores[i].mano.head = NULL;
+        jugadores[i].mano.size = 0;
+        jugadores[i].turno = false;
+        i++; //pasamos al sig jugador
     }
-    //reiniciamos la mano del jugador 
-    jugadores[i].mano.head = NULL;
-    jugadores[i]mano.turno = false;
-    jugadores[i].mano.size = 0;
-    jugadores[i].nombre[j] = "\0" // para asegurarnos que el nombre termino
-    i ++; //pasamos al sig jugador
 }
+
 
 //funcion para encontrar al jugador que empezara la ronda
 int primerJugador(){
