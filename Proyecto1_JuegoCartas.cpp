@@ -10,7 +10,7 @@ int main(){
     while (ronda <= 3){
         cout << "Ronda " << ronda << endl;
         initRonda();
-        ronda ++
+        ronda ++;
     }
     return 0;
 }
