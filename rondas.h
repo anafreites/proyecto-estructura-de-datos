@@ -87,12 +87,13 @@ void crear_mazo(){
     while (palo < 4){ //sabemos que el palo puede ser 0, 1, 2 y 3
         int rango = 0; //reiniciamos el rango de las cartas
         while (rango < 13){ //el rango va de 0 a 12
-            push(&mazo, rango, palo);
+            push(&mazo, rango, palo); //vamos agregando las cartas al mazo
             rango ++;
         }
-        push(&mazo, 13, -1); //agregar los jokers COMMIT
         palo ++;
     }
+    push(&mazo, 13, -1); //agregar los jokers (no tienen palo, por lo que seria)
+    push(&mazo, 13, -1); //2 veces porque son 2 jokers
 }
 
 //funcion para repartir cartas
@@ -181,10 +182,11 @@ int encontrarMendigo() {
 
 
 //funcion para iniciar una ronda
-void initRonda(){
-    initJugadores();
-    crear_mazo();
-    repartir();
-
-
+void initRonda(int ronda){
+    initJugadores(); //inicializamos a los jugadores
+    crear_mazo(); //creamos el mazo
+    repartir(); //repartimos las cartas
+    if (ronda == 1) turno = primerJugador(); //en la primera ronda inicia el jugador q tiene el 3 de diamantes
+    turno = encontrarMendigo(); //a partir de la 2da ronda empieza el mendigo
+    turno = 0; //reiniciamos el turno porque no necesariamente el mismo jugador inicia todas las rondas
 }
