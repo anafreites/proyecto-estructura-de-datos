@@ -1,4 +1,5 @@
 #include <iostream>
+#include "rondas.h"
 using namespace std;
 //elaborado por Guillermo Vivas
 
@@ -41,7 +42,7 @@ struct NodoCarta {
     Carta carta;
     NodoCarta* siguiente;
 
-    NodoCarta(Carta c) : carta(c), siguiente(nullptr) {}
+    NodoCarta(Carta c) : carta(c), siguiente(NULL) {}
 };
 
 struct PilaCartas {
@@ -76,6 +77,101 @@ struct PilaCartas {
         }
         return Carta(-1, ' ');
     }
+};
+
+void pedirCartas(PilaCartas& jugadaTemporal, Jugador& jugador, int cantidad, int i = 0) {
+    if (i == cantidad) return;
+
+    cout << "Ingresa el valor (0=3 ... 13=Joker) de la carta #" << i + 1 << ": ";
+    int valor;
+    cin >> valor;
+
+    cout << "Ingresa el palo (P, C, D, T o J para Joker): ";
+    char palo;
+    cin >> palo;
+
+    NodoCarta* actual = jugador.mano.cima;
+    NodoCarta* anterior = nullptr;
+    bool encontrada = false;
+
+    while (actual != nullptr) {
+        if (actual->carta.valor_numerico == valor && actual->carta.palo == palo) {
+            if (anterior == nullptr) {
+                jugador.mano.cima = actual->siguiente;
+            } else {
+                anterior->siguiente = actual->siguiente;
+            }
+
+            actual->siguiente = nullptr;
+            jugadaTemporal.push(actual->carta);
+            delete actual;
+            encontrada = true;
+            break;
+        }
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (!encontrada) {
+        cout << "Carta no encontrada. Turno anulado." << endl;
+        NodoCarta* temp = jugadaTemporal.cima;
+        while (temp != nullptr) {
+            jugador.mano.push(temp->carta);
+            temp = temp->siguiente;
+        }
+        pasesConsecutivos++;
+        return;
+    }
+
+    pedirCartas(jugadaTemporal, jugador, cantidad, i + 1);
+}
+
+void jugarTurno(int jugadorID) {
+    Jugador& jugador = jugadores[jugadorID];
+    cout << "\nTurno de " << jugador.nombre << endl;
+    jugador.mano.mostrar_pila();
+
+    cout << "¿Deseas pasar (0) o jugar cartas (1)? ";
+    int opcion;
+    cin >> opcion;
+
+    if (opcion == 0) {
+        cout << jugador.nombre << " ha pasado." << endl;
+        pasesConsecutivos++;
+        return;
+    }
+
+    cout << "¿Cuántas cartas deseas jugar? ";
+    int cantidad;
+    cin >> cantidad;
+
+    if (cantidad <= 0) {
+        cout << "Cantidad inválida. Turno perdido." << endl;
+        pasesConsecutivos++;
+        return;
+    }
+
+    PilaCartas jugadaTemporal;
+    pedirCartas(jugadaTemporal, jugador, cantidad);
+
+    // Validar la jugada
+    if (!validarJugada(jugadaTemporal, jugadaActual)) {
+        cout << "Jugada inválida. Pierdes el turno." << endl;
+        NodoCarta* temp = jugadaTemporal.cima;
+        while (temp != nullptr) {
+            jugador.mano.push(temp->carta);
+            temp = temp->siguiente;
+        }
+        pasesConsecutivos++;
+        return;
+    }
+
+    // Jugada válida
+    jugadaActual = jugadaTemporal;
+    pasesConsecutivos = 0;
+    cout << jugador.nombre << " jugó " << cantidad << " carta(s)." << endl;
+}
+
 
     void mostrar_pila() {
         NodoCarta* actual = cima;
